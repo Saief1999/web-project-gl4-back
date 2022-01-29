@@ -1,10 +1,15 @@
-import { Body, Controller, Post, UseFilters } from '@nestjs/common';
-import { BadRequestExceptionFilter } from 'src/filters/bad-request-exception.filter';
+import {
+  Body,
+  Controller,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { LoginResponseDto } from '../dto/login-response.dto';
 import { LoginDto } from '../dto/login.dto';
+import { RegisterDto } from '../dto/register.dto';
 import { AuthenticationService } from '../services/authentication.service';
-
-@UseFilters(BadRequestExceptionFilter)
+@UsePipes(ValidationPipe)
 @Controller('authentication')
 export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}
@@ -18,7 +23,8 @@ export class AuthenticationController {
   }
 
   @Post('signup')
-  public signup(): void {
-    return;
+  public async signup(@Body() data: RegisterDto): Promise<LoginResponseDto> {
+    const response = await this.authenticationService.register(data);
+    return response;
   }
 }

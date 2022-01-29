@@ -1,10 +1,3 @@
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
-
-export class LoginDto {
-  @IsNotEmpty()
-  @IsEmail()
-  public email: string;
-  @IsNotEmpty()
-  @MinLength(5)
-  public password: string;
-}
+import { PickType } from '@nestjs/mapped-types';
+import { UserModel } from 'src/Models/user.model';
+export class LoginDto extends PickType(UserModel, ['email', 'password']) {}
