@@ -8,12 +8,15 @@ import { RegisterDto } from '../dto/register.dto';
 import { PayloadDto } from '../dto/payload.dto';
 import { JwtService } from '@nestjs/jwt';
 import { LoginResponseDto } from '../dto/login-response.dto';
+import { MailService } from 'src/mail/mail.service';
+import { EmailConfirmationPayloadDto } from '../dto/email-confirmation-payload.dto';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     @InjectModel('user') private readonly userModel: Model<UserModel>,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   public async login(loginData: LoginDto): Promise<LoginResponseDto> {
@@ -71,6 +74,12 @@ export class AuthenticationService {
       role: newUser.role,
     };
     const jwt = this.jwtService.sign(payload);
+    const emailPayload: EmailConfirmationPayloadDto = {
+      username,
+      firstname,
+      lastname,
+    };
+    await this.mailService.mailConfirmation(emailPayload, email);
     return { token: jwt } as LoginResponseDto;
   }
 }

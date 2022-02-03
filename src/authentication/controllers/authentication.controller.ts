@@ -5,6 +5,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { MailService } from 'src/mail/mail.service';
 import { LoginResponseDto } from '../dto/login-response.dto';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';

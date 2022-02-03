@@ -1,11 +1,4 @@
-import {
-  IsDate,
-  IsEmail,
-  IsEnum,
-  IsNotEmpty,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 import * as mongoose from 'mongoose';
 
 export enum UserRoleEnum {
@@ -20,9 +13,15 @@ export const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   profilepicture: { type: String },
-  role: { type: String, enum: UserRoleEnum, required: true },
-  createdAt: { type: Date, required: true },
-  deletedAt: { type: Date, default: null }
+  role: {
+    type: String,
+    enum: UserRoleEnum,
+    required: true,
+    default: UserRoleEnum.user,
+  },
+  createdAt: { type: Date, required: true, default: new Date(Date.now()) },
+  deletedAt: { type: Date, default: null },
+  Activated: { type: Boolean, required: true, default: false },
 });
 
 export class UserModel {
@@ -45,8 +44,9 @@ export class UserModel {
   email: string;
   createdAt: Date;
   deletedAt: Date | null;
-  role: UserRoleEnum
+  role: UserRoleEnum;
   profileImage: string;
+  Activated: boolean;
 
   constructor(username, firstname, lastname, email, password) {
     this.username = username;
@@ -54,9 +54,5 @@ export class UserModel {
     this.firstname = firstname;
     this.email = email;
     this.password = password;
-    this.createdAt = new Date(Date.now());
-    this.deletedAt = null;
-    this.role = UserRoleEnum.user;
-    this.profileImage = '';
   }
 }
