@@ -18,9 +18,8 @@ export class BadRequestExceptionFilter<BadRequestException>
 
     response.status(HttpStatus.BAD_REQUEST).json({
       statusCode: HttpStatus.BAD_REQUEST,
-      message: 'invalid Credentials, Try again',
+      message: "Credentials provided doesn't match an exisiting user",
     });
-
     return response;
   }
 }
