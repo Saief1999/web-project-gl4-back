@@ -8,4 +8,10 @@ export class Base {
 
     @Prop()
     updatedAt?:Date
+
+    @Prop()
+    deletedAt?:Date
+
+    @Prop()
+    isDeleted?:boolean
 }

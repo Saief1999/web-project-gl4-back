@@ -2,12 +2,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Mongoose } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { Base } from 'src/generics/db/base.model';
-import { IsDate, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { softDeletePlugin } from "soft-delete-plugin-mongoose"
 
-export type CinemaDocument = Cinema & Document;
-
-@Schema()
+@Schema({ timestamps: true, versionKey: false })
 export class Cinema extends Base {
+    _id: string;
 
     @IsNotEmpty()
     @Prop({ type: mongoose.Schema.Types.String })
@@ -27,14 +27,12 @@ export class Cinema extends Base {
     phone: number;
 
     @IsOptional()
-    @IsDate()
-    @Prop({ type: mongoose.Schema.Types.Date })
-    openingTime: Date;
+    @Prop({ type: mongoose.Schema.Types.String })
+    openingTime: string;
     
     @IsOptional()
-    @IsDate()
-    @Prop({ type: mongoose.Schema.Types.Date })
-    closingTime: Date;
+    @Prop({ type: mongoose.Schema.Types.String })
+    closingTime: string;
 }
 
-export const CinemaSchema = SchemaFactory.createForClass(Cinema);
+export const CinemaSchema = SchemaFactory.createForClass(Cinema).plugin(softDeletePlugin)
