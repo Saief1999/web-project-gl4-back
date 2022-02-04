@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { CinemaModule } from './cinema/cinema.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
       `mongodb+srv://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_CLUSTER}.c5opi.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`
     ),
     AuthenticationModule,
+    CinemaModule
   ],
   controllers: [AppController],
   providers: [AppService],
