@@ -20,7 +20,7 @@ export class MailService {
     await this.mailerService.sendMail({
       to: email,
       subject: 'Email Confirmation',
-      template: '../mail/templates/mail-confirmation.hbs',
+      template: 'mail-confirmation.hbs',
       context: { ...payload, link },
     });
   }

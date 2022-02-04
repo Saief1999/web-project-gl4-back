@@ -7,6 +7,7 @@ import { MailModule } from 'src/mail/mail.module';
 import { UserSchema } from 'src/Models/user.model';
 import { AuthenticationController } from './controllers/authentication.controller';
 import { AuthenticationService } from './services/authentication.service';
+import { EmailConfirmationService } from './services/email-confirmation/email-confirmation.service';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { AuthenticationService } from './services/authentication.service';
     MailModule,
   ],
   controllers: [AuthenticationController],
-  providers: [AuthenticationService],
+  providers: [AuthenticationService, EmailConfirmationService],
 })
 export class AuthenticationModule {}
