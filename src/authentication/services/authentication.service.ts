@@ -1,27 +1,26 @@
 import * as bcrypt from 'bcrypt';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { UserModel } from 'src/Models/user.model';
+import { User } from 'src/Models/user.model';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
-import { PayloadDto } from '../dto/payload.dto';
+import { AuthenticationTokenPayloadDto } from '../dto/payload.dto';
 import { JwtService } from '@nestjs/jwt';
-import { LoginResponseDto } from '../dto/login-response.dto';
+import { AuthenticationResponseDto } from '../dto/login-response.dto';
 import { MailService } from 'src/mail/mail.service';
 import { EmailConfirmationPayloadDto } from '../dto/email-confirmation-payload.dto';
+import { UserService } from './user.service';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
-    @InjectModel('user') private readonly userModel: Model<UserModel>,
+    private readonly userRepository: UserService,
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
   ) {}
 
-  public async login(loginData: LoginDto): Promise<LoginResponseDto> {
+  public async login(loginData: LoginDto): Promise<AuthenticationResponseDto> {
     const { email, password } = loginData;
-    const user = await this.userModel.findOne({ email }).exec();
+    const user: User = await this.userRepository.findByEmail(email);
     if (!user) {
       throw new BadRequestException({
         message: 'email does not match an exisiting user',
@@ -31,27 +30,21 @@ export class AuthenticationService {
     if (!isAuthenticated) {
       throw new BadRequestException({ message: 'password is not correct' });
     } else {
-      const payload: PayloadDto = {
-        email: user.email,
-        password: user.password,
-        role: user.role,
-      };
-      const jwt = this.jwtService.sign(payload);
-      return { token: jwt } as LoginResponseDto;
+      return this.createJwtToken(user);
     }
   }
 
   public async register(
     registrationData: RegisterDto,
-  ): Promise<LoginResponseDto> {
+  ): Promise<AuthenticationResponseDto> {
     const { username, firstname, lastname, email, password } = registrationData;
-    const userByUsername = await this.userModel.findOne({ username }).exec();
+    const userByUsername = await this.userRepository.findByUsername(username);
     if (userByUsername) {
       throw new BadRequestException({
         message: 'Username already used, please try another username',
       });
     }
-    const userByEmail = await this.userModel.findOne({ email }).exec();
+    const userByEmail = await this.userRepository.findByEmail(email);
     if (userByEmail) {
       throw new BadRequestException({
         message: 'Email already used please try another email',
@@ -59,27 +52,30 @@ export class AuthenticationService {
     }
     const salt = await bcrypt.genSalt();
     const savedPassword = (await bcrypt.hash(password, salt)).toString();
-    const userData = new UserModel(
+    const newUser: User = {
       username,
       firstname,
       lastname,
       email,
-      savedPassword,
-    );
-    const newUser = new this.userModel(userData);
-    await newUser.save();
-    const payload: PayloadDto = {
-      email: email,
-      password: password,
-      role: newUser.role,
+      password: savedPassword,
     };
-    const jwt = this.jwtService.sign(payload);
+    this.userRepository.create(newUser);
     const emailPayload: EmailConfirmationPayloadDto = {
       username,
       firstname,
       lastname,
     };
     await this.mailService.mailConfirmation(emailPayload, email);
-    return { token: jwt } as LoginResponseDto;
+    return this.createJwtToken(newUser);
+  }
+
+  createJwtToken(user: User): AuthenticationResponseDto {
+    const payload: AuthenticationTokenPayloadDto = {
+      email: user.email,
+      password: user.password,
+      role: user.role,
+    };
+    const jwt = this.jwtService.sign(payload);
+    return { token: jwt } as AuthenticationResponseDto;
   }
 }

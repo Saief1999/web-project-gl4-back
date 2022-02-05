@@ -7,7 +7,7 @@ import { SoftDeleteModel } from "soft-delete-plugin-mongoose"
 
 @Injectable()
 export class BaseService<Schema extends Base > {
-    constructor(private readonly model:SoftDeleteModel<Schema & Document>) {}
+    constructor(protected readonly model:SoftDeleteModel<Schema & Document>) {}
 
     async findOne(id: string):Promise<Schema> {
         return this.model.findOne({_id:id}).exec();

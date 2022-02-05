@@ -4,17 +4,18 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { MailModule } from 'src/mail/mail.module';
-import { UserSchema } from 'src/Models/user.model';
+import { User, UserSchema } from 'src/Models/user.model';
 import { AuthenticationController } from './controllers/authentication.controller';
 import { AuthenticationService } from './services/authentication.service';
-import { EmailConfirmationService } from './services/email-confirmation/email-confirmation.service';
+import { EmailConfirmationService } from './services/email-confirmation.service';
+import { UserService } from './services/user.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forFeature([{ name: 'user', schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: process.env.SECRET,
@@ -25,6 +26,6 @@ import { EmailConfirmationService } from './services/email-confirmation/email-co
     MailModule,
   ],
   controllers: [AuthenticationController],
-  providers: [AuthenticationService, EmailConfirmationService],
+  providers: [UserService, AuthenticationService, EmailConfirmationService],
 })
 export class AuthenticationModule {}
