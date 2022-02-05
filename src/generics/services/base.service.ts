@@ -1,15 +1,18 @@
-import { HttpException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, HttpException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Document, Model } from "mongoose";
+import { Document, isValidObjectId, Model } from "mongoose";
 import { Base } from "../db/base.model";
 import { SoftDeleteModel } from "soft-delete-plugin-mongoose"
-
 
 @Injectable()
 export class BaseService<Schema extends Base > {
     constructor(protected readonly model:SoftDeleteModel<Schema & Document>) {}
 
     async findOne(id: string):Promise<Schema> {
+
+        if (!isValidObjectId(id))
+            throw new BadRequestException("Invalid id")
+            
         const schema:Schema = await this.model.findOne({_id:id}).exec();
         if (!schema)
             throw new NotFoundException();
@@ -26,6 +29,10 @@ export class BaseService<Schema extends Base > {
     }
 
     async update(id:string, schema):Promise<Schema> {
+
+        if (!isValidObjectId(id))
+            throw new BadRequestException("Invalid id")
+
         const newSchema = await this.model.findOneAndUpdate({_id: id},schema, {
             new: true
           });
@@ -35,6 +42,10 @@ export class BaseService<Schema extends Base > {
     }
 
     async remove(id:string) {
+
+        if (!isValidObjectId(id))
+            throw new BadRequestException("Invalid id")
+
         const deleted = await this.model.softDelete({_id: id});
 
         if (deleted && deleted.deleted === 0)
@@ -44,6 +55,9 @@ export class BaseService<Schema extends Base > {
     }
 
     async restore(id:string) {
+
+        if (!isValidObjectId(id))
+            throw new BadRequestException("Invalid id")
         const restored  = await this.model.restore({_id: id});
 
         if (restored  && restored.restored === 0)
