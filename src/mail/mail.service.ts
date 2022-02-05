@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { EmailConfirmationPayloadDto } from '../authentication/dto/email-confirmation-payload.dto';
-import { EmailPayload } from '../authentication/dto/confirmation-mail-token.dto';
+import { EmailConfirmationTokenPayloadDto } from '../authentication/dto/confirmation-mail-token.dto';
 import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class MailService {
@@ -13,7 +13,7 @@ export class MailService {
     payload: EmailConfirmationPayloadDto,
     email: string,
   ): Promise<void> {
-    const tokenPayload: EmailPayload = { email };
+    const tokenPayload: EmailConfirmationTokenPayloadDto = { email };
     const link = `${
       process.env.EMAIL_CONFIRMATION_URL
     }?token=${this.jwtService.sign(tokenPayload)}`;

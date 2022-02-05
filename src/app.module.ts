@@ -1,3 +1,4 @@
+import { UserService } from './authentication/services/user.service';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -17,7 +18,7 @@ import { MailModule } from './mail/mail.module';
     ),
     AuthenticationModule,
     CinemaModule,
-    MailModule
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

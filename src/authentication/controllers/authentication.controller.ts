@@ -6,8 +6,8 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { EmailConfirmationService } from '../services/email-confirmation/email-confirmation.service';
-import { LoginResponseDto } from '../dto/login-response.dto';
+import { EmailConfirmationService } from '../services/email-confirmation.service';
+import { AuthenticationResponseDto } from '../dto/login-response.dto';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { AuthenticationService } from '../services/authentication.service';
@@ -20,22 +20,25 @@ export class AuthenticationController {
   ) {}
 
   @Post('login')
-  public async login(@Body() loginData: LoginDto): Promise<LoginResponseDto> {
-    const response: LoginResponseDto = await this.authenticationService.login(
-      loginData,
-    );
+  public async login(
+    @Body() loginData: LoginDto,
+  ): Promise<AuthenticationResponseDto> {
+    const response: AuthenticationResponseDto =
+      await this.authenticationService.login(loginData);
     return response;
   }
 
   @Post('signup')
-  public async signup(@Body() data: RegisterDto): Promise<LoginResponseDto> {
+  public async signup(
+    @Body() data: RegisterDto,
+  ): Promise<AuthenticationResponseDto> {
     const response = await this.authenticationService.register(data);
     return response;
   }
 
   @Post('confirm')
   public async confirmEmail(
-    @Query() params: LoginResponseDto,
+    @Query() params: AuthenticationResponseDto,
   ): Promise<string> {
     const { token } = params;
     await this.emailConfirmationService.confirmEmail(token);
