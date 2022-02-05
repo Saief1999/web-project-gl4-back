@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Post,
-  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -38,10 +37,10 @@ export class AuthenticationController {
 
   @Post('confirm')
   public async confirmEmail(
-    @Query() params: AuthenticationResponseDto,
-  ): Promise<string> {
+    @Body() params: AuthenticationResponseDto,
+  ): Promise<any> {
     const { token } = params;
     await this.emailConfirmationService.confirmEmail(token);
-    return 'Email Confirmed Successfully';
+    return { message: 'Email Confirmed Successfully' };
   }
 }
