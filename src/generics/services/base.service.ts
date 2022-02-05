@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Document, Model } from "mongoose";
 import { Base } from "../db/base.model";
@@ -10,7 +10,10 @@ export class BaseService<Schema extends Base > {
     constructor(protected readonly model:SoftDeleteModel<Schema & Document>) {}
 
     async findOne(id: string):Promise<Schema> {
-        return this.model.findOne({_id:id}).exec();
+        const schema:Schema = await this.model.findOne({_id:id}).exec();
+        if (!schema)
+            throw new NotFoundException();
+        return schema;
     }
 
     async findAll():Promise<Schema[]>{
@@ -23,19 +26,29 @@ export class BaseService<Schema extends Base > {
     }
 
     async update(id:string, schema):Promise<Schema> {
-        return this.model.findOneAndUpdate({_id: id},schema, {
+        const newSchema = await this.model.findOneAndUpdate({_id: id},schema, {
             new: true
           });
+        if (!newSchema)
+          throw new NotFoundException();
+        return newSchema;
     }
 
     async remove(id:string) {
-
         const deleted = await this.model.softDelete({_id: id});
+
+        if (deleted && deleted.deleted === 0)
+            throw new NotFoundException();
+
         return deleted;
     }
 
     async restore(id:string) {
-        const restored = await this.model.restore({_id: id});
+        const restored  = await this.model.restore({_id: id});
+
+        if (restored  && restored.restored === 0)
+            throw new NotFoundException();
+
         return restored ; 
     }
 }
