@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { User } from 'src/Models/user.model';
+import { User, UserRoleEnum } from 'src/Models/user.model';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { AuthenticationTokenPayloadDto } from '../dto/payload.dto';
@@ -22,13 +22,11 @@ export class AuthenticationService {
     const { email, password } = loginData;
     const user: User = await this.userRepository.findByEmail(email);
     if (!user) {
-      throw new BadRequestException({
-        message: 'email does not match an exisiting user',
-      });
+      throw new BadRequestException('email does not match an exisiting user');
     }
     const isAuthenticated = await bcrypt.compare(password, user.password);
     if (!isAuthenticated) {
-      throw new BadRequestException({ message: 'password is not correct' });
+      throw new BadRequestException('password is not correct');
     } else {
       return this.createJwtToken(user);
     }
@@ -38,17 +36,15 @@ export class AuthenticationService {
     registrationData: RegisterDto,
   ): Promise<AuthenticationResponseDto> {
     const { username, firstname, lastname, email, password } = registrationData;
-    const userByUsername = await this.userRepository.findByUsername(username);
-    if (userByUsername) {
-      throw new BadRequestException({
-        message: 'Username already used, please try another username',
-      });
+    if (await this.userRepository.existsByUsername(username)) {
+      throw new BadRequestException(
+        'Username already used, please try another username',
+      );
     }
-    const userByEmail = await this.userRepository.findByEmail(email);
-    if (userByEmail) {
-      throw new BadRequestException({
-        message: 'Email already used please try another email',
-      });
+    if (await this.userRepository.existsByEmail(email)) {
+      throw new BadRequestException(
+        'Email already used please try another email',
+      );
     }
     const salt = await bcrypt.genSalt();
     const savedPassword = (await bcrypt.hash(password, salt)).toString();
@@ -73,7 +69,7 @@ export class AuthenticationService {
     const payload: AuthenticationTokenPayloadDto = {
       email: user.email,
       password: user.password,
-      role: user.role,
+      role: UserRoleEnum.user,
     };
     const jwt = this.jwtService.sign(payload);
     return { token: jwt } as AuthenticationResponseDto;
