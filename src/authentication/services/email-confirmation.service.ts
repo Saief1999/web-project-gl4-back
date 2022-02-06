@@ -3,28 +3,53 @@ import { JwtService } from '@nestjs/jwt';
 import { EmailConfirmationTokenPayloadDto } from 'src/authentication/dto/confirmation-mail-token.dto';
 import { User } from 'src/Models/user.model';
 import { UserService } from './user.service';
+import { MailService } from '../../mail/mail.service';
+import { EmailConfirmationPayloadDto } from '../dto/email-confirmation-payload.dto';
 
 @Injectable()
 export class EmailConfirmationService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userRepository: UserService,
+    private readonly mailService: MailService,
   ) {}
 
   public async confirmEmail(token: string): Promise<void> {
-    if (!this.jwtService.verify(token)) {
-      throw new BadRequestException({ message: 'unvalid jwt token' });
-    }
-    const { email } = this.jwtService.decode(
-      token,
-    ) as EmailConfirmationTokenPayloadDto;
+    const email = await this.decodeEmailfromToken(token);
     const user: User = await this.userRepository.findByEmail(email);
     if (!user) {
       throw new BadRequestException({
         message: 'Token does not match an existing user',
       });
     }
+    if (user.activated)
+      throw new BadRequestException({ message: 'Account already activated' });
     user.activated = true;
     this.userRepository.update(user._id, user);
+  }
+
+  public async decodeEmailfromToken(token: string): Promise<string> {
+    try {
+      const payload: EmailConfirmationTokenPayloadDto =
+        await this.jwtService.verify(token);
+      return payload.email;
+    } catch (error) {
+      if (error?.name === 'TokenExpiredError')
+        throw new BadRequestException('Email Confirmation Token Expired');
+      throw new BadRequestException('Bad Token Provided');
+    }
+  }
+
+  public async resendEmailConfirmation(user: User): Promise<void> {
+    if (user.activated) {
+      throw new BadRequestException('UserAlready activated');
+    }
+    const { username, firstname, lastname } = user;
+    const emailPayload: EmailConfirmationPayloadDto = {
+      username,
+      firstname,
+      lastname,
+    };
+    await this.mailService.mailConfirmation(emailPayload, user.email);
   }
 }

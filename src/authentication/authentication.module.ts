@@ -9,6 +9,7 @@ import { AuthenticationController } from './controllers/authentication.controlle
 import { AuthenticationService } from './services/authentication.service';
 import { EmailConfirmationService } from './services/email-confirmation.service';
 import { UserService } from './services/user.service';
+import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
   imports: [
@@ -26,6 +27,12 @@ import { UserService } from './services/user.service';
     MailModule,
   ],
   controllers: [AuthenticationController],
-  providers: [UserService, AuthenticationService, EmailConfirmationService],
+  providers: [
+    UserService,
+    AuthenticationService,
+    EmailConfirmationService,
+    JwtStrategy,
+  ],
+  exports: [UserService],
 })
 export class AuthenticationModule {}

@@ -1,17 +1,14 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Query,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { EmailConfirmationService } from '../services/email-confirmation.service';
 import { AuthenticationResponseDto } from '../dto/login-response.dto';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { AuthenticationService } from '../services/authentication.service';
-@UsePipes(ValidationPipe)
+import { AuthGuard } from '@nestjs/passport';
+import { RoleAuthGuard } from 'src/guards/role-auth.guard';
+import { Role } from 'src/decorators/role-metadata.decorator';
+import { User, UserRoleEnum } from 'src/Models/user.model';
+import { GetUser } from 'src/decorators/get-user.decorator';
 @Controller()
 export class AuthenticationController {
   constructor(
@@ -36,12 +33,21 @@ export class AuthenticationController {
     return response;
   }
 
+  @Role(UserRoleEnum.user)
+  @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
   @Post('confirm')
   public async confirmEmail(
-    @Query() params: AuthenticationResponseDto,
-  ): Promise<string> {
+    @Body() params: AuthenticationResponseDto,
+  ): Promise<any> {
     const { token } = params;
     await this.emailConfirmationService.confirmEmail(token);
-    return 'Email Confirmed Successfully';
+    return { message: 'Email Confirmed Successfully' };
+  }
+
+  @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
+  @Role(UserRoleEnum.user)
+  @Get('resend-confirmation-link')
+  public async resendConfirmationLink(@GetUser() user: User): Promise<void> {
+    await this.emailConfirmationService.resendEmailConfirmation(user);
   }
 }
