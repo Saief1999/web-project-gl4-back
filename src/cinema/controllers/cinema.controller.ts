@@ -7,18 +7,28 @@ import {
   Patch,
   Post,
   Put,
-  UseGuards,
+  Res,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { hostname } from 'os';
+import { join } from 'path/posix';
 import { Role } from 'src/decorators/role-metadata.decorator';
 import { RoleAuthGuard } from 'src/guards/role-auth.guard';
+import { app } from 'src/main';
 import { Cinema } from 'src/Models/cinema.model';
 import { UserRoleEnum } from 'src/Models/user.model';
-import { RequestParamDto } from '../dtos/request-param.dto';
-import { UpdateCinemaDto } from '../dtos/update-cinema.dto';
+import { cinemaImageName, imageFileFilter, uploadDestination } from 'src/utilities/upload';
+import { RequestParamDto } from '../dtos/request/request-param.dto';
+import { UpdateCinemaDto } from '../dtos/request/update-cinema.dto';
+import { CinemaImageDto } from '../dtos/response/cinema-image.dto';
+import { CinemaListItem } from '../dtos/response/cinema-list-item.dto';
 import { CinemaService } from '../services/cinema.service';
 
-@UseGuards(AuthGuard('jwt'), RoleAuthGuard)
+// @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
 @Controller('cinemas')
 export class CinemaController {
   constructor(private readonly cinemaService: CinemaService) {}
@@ -27,13 +37,32 @@ export class CinemaController {
   @Get(':id')
   async getCinema(@Param() params: RequestParamDto): Promise<Cinema> {
     const { id } = params;
-    return this.cinemaService.findOne(id);
+    return this.cinemaService.findOne(id, { createdAt: 0, updatedAt: 0, deletedAt: 0, isDeleted: 0 });
   }
 
   @Role(UserRoleEnum.user, UserRoleEnum.admin)
   @Get()
-  async listCinemas(): Promise<Cinema[]> {
-    return this.cinemaService.findAll();
+  async listCinemas(): Promise<CinemaListItem[]> {
+    return this.cinemaService.findAllCinemas();
+  }
+
+  // send old image in payload to mark it as disabled
+  @Role(UserRoleEnum.admin)
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('image', {
+    'storage': diskStorage({
+      destination: join(uploadDestination,"uploads", "cinemas"),
+      filename: cinemaImageName,
+    }),
+    fileFilter: imageFileFilter,
+    limits: {
+      fileSize: 10000000 // 10 MB
+    }
+  }))
+
+  async uploadImage(@UploadedFile() file:Express.Multer.File):Promise<CinemaImageDto> {
+    // We need to find a way to get the domain name/port of the server dynamically
+    return new CinemaImageDto(join("http://localhost:3000", "uploads", "cinemas", file.filename));
   }
 
   @Role(UserRoleEnum.admin)
