@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Document } from 'mongoose';
+import { Document, FilterQuery } from 'mongoose';
 import { Base } from '../db/base.model';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 
@@ -7,14 +7,14 @@ import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 export class BaseService<Schema extends Base> {
   constructor(protected readonly model: SoftDeleteModel<Schema & Document>) {}
 
-  async findOne(id: string): Promise<Schema> {
-    const schema: Schema = await this.model.findOne({ _id: id }).exec();
+  async findOne(id: string, projection: any | null = null): Promise<Schema> {
+    const schema: Schema = await this.model.findOne({ _id: id }, projection).exec();
     if (!schema) throw new NotFoundException();
     return schema;
   }
 
-  async findAll(): Promise<Schema[]> {
-    return this.model.find({}).exec();
+  async findAll(filter: FilterQuery<Schema & Document> = {}, projection: any | null = null): Promise<Schema[]> {
+    return this.model.find(filter, projection).exec();
   }
 
   async create(schema: Schema): Promise<Schema> {

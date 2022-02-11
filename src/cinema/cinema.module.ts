@@ -13,5 +13,4 @@ import { CinemaService } from "./services/cinema.service";
     providers: [CinemaService],
 })
 export class CinemaModule {
-
 }
