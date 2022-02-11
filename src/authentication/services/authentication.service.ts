@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { User, UserRoleEnum } from 'src/Models/user.model';
+import { User } from 'src/Models/user.model';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { AuthenticationTokenPayloadDto } from '../dto/payload.dto';
@@ -48,14 +48,14 @@ export class AuthenticationService {
     }
     const salt = await bcrypt.genSalt();
     const savedPassword = (await bcrypt.hash(password, salt)).toString();
-    const newUser: User = {
+    const user: User = {
       username,
       firstname,
       lastname,
       email,
       password: savedPassword,
     };
-    this.userRepository.create(newUser);
+    const newUser = await this.userRepository.create(user);
     const emailPayload: EmailConfirmationPayloadDto = {
       username,
       firstname,
@@ -66,11 +66,7 @@ export class AuthenticationService {
   }
 
   createJwtToken(user: User): AuthenticationResponseDto {
-    const payload: AuthenticationTokenPayloadDto = {
-      email: user.email,
-      password: user.password,
-      role: UserRoleEnum.user,
-    };
+    const payload: AuthenticationTokenPayloadDto = user;
     const jwt = this.jwtService.sign(payload);
     return { token: jwt } as AuthenticationResponseDto;
   }

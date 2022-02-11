@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
-import { SafeString } from 'handlebars';
 import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { Base } from 'src/generics/db/base.model';
 
@@ -59,7 +58,7 @@ export class User extends Base {
   activated?: boolean;
 
   @Prop({ type: String })
-  quote?: SafeString;
+  quote?: string;
 
   @Prop({
     type: String,

@@ -27,11 +27,9 @@ import { uploadDestination } from './utilities/upload';
 
     AccountsModule,
     MulterModule.register({}), // File upload
-    ServeStaticModule.forRoot(
-      {
-        rootPath: uploadDestination
-      }
-    )
+    ServeStaticModule.forRoot({
+      rootPath: uploadDestination,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
