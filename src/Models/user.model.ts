@@ -1,11 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { SafeString } from 'handlebars';
 import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { Base } from 'src/generics/db/base.model';
 
 export enum UserRoleEnum {
   admin = 'admin',
   user = 'user',
+}
+
+export enum GenderEnum {
+  male = 'Male',
+  female = 'Female',
+  undecalred = 'Rather not Say',
 }
 @Schema({ timestamps: true, versionKey: false })
 export class User extends Base {
@@ -50,6 +57,19 @@ export class User extends Base {
 
   @Prop({ type: Boolean, required: true, default: false })
   activated?: boolean;
+
+  @Prop({ type: String })
+  quote?: SafeString;
+
+  @Prop({
+    type: String,
+    enum: GenderEnum,
+    default: GenderEnum.undecalred,
+  })
+  gender?: GenderEnum;
+
+  @Prop({ type: String })
+  Birthday?: Date;
 }
 
 export const UserSchema =

@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { CinemaModule } from './cinema/cinema.module';
 import { MailModule } from './mail/mail.module';
+import { AccountsModule } from './accounts/accounts.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { MailModule } from './mail/mail.module';
     AuthenticationModule,
     CinemaModule,
     MailModule,
+    AccountsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
