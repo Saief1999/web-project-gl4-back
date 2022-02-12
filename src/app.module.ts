@@ -24,7 +24,6 @@ import { uploadDestination } from './utilities/upload';
     AuthenticationModule,
     CinemaModule,
     MailModule,
-
     AccountsModule,
     MulterModule.register({}), // File upload
     ServeStaticModule.forRoot({

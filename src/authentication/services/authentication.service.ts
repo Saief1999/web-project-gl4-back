@@ -66,7 +66,13 @@ export class AuthenticationService {
   }
 
   createJwtToken(user: User): AuthenticationResponseDto {
-    const payload: AuthenticationTokenPayloadDto = user;
+    const payload: AuthenticationTokenPayloadDto = {
+      _id: user._id,
+      email: user.email,
+      username: user.username,
+      activated: user.activated,
+      role: user.role,
+    };
     const jwt = this.jwtService.sign(payload);
     return { token: jwt } as AuthenticationResponseDto;
   }
