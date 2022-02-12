@@ -15,7 +15,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { hostname } from 'os';
-import { join } from 'path/posix';
+import { join } from 'path';
 import { Role } from 'src/decorators/role-metadata.decorator';
 import { RoleAuthGuard } from 'src/guards/role-auth.guard';
 import { app } from 'src/main';
