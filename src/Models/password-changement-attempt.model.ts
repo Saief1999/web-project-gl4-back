@@ -8,8 +8,8 @@ export class PasswordChangementAttempt extends Base {
   @Prop({ type: String, required: true })
   username: string;
 
-  @Prop({ type: String, required: true })
-  verificationCode: string;
+  @Prop({ type: Number, required: true })
+  verificationCode: number;
 
   @Prop({ type: String, required: true })
   newPassword: string;
@@ -17,7 +17,7 @@ export class PasswordChangementAttempt extends Base {
   constructor() {
     super();
     this.username = '';
-    this.verificationCode = '';
+    this.verificationCode = 0;
     this.newPassword = '';
   }
 }

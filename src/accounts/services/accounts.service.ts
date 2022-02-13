@@ -9,6 +9,9 @@ import { PasswordUpdateRequestDto } from '../dto/password-update-request.dto';
 import { PasswordChangementAttemptService } from './password-changement-attempt.service';
 import { PasswordChangementAttempt } from 'src/Models/password-changement-attempt.model';
 import { MailService } from 'src/mail/mail.service';
+import { PasswordUpdateResponseDto } from '../dto/password-update-response.dto';
+import { VerificationCodeRequestDto } from '../dto/verification-code-request.dto';
+import { VerificationCodeResponseDto } from '../dto/verification-code-response.dto';
 
 @Injectable()
 export class AccountsService {
@@ -37,7 +40,7 @@ export class AccountsService {
   async updatePasswordPhaseOne(
     user: User,
     payload: PasswordUpdateRequestDto,
-  ): Promise<string> {
+  ): Promise<PasswordUpdateResponseDto> {
     /**
      * Verify whether the password matches the users password
      * if it's the case store at the database the verification code with th user_id and the hashed new password
@@ -52,8 +55,7 @@ export class AccountsService {
       const savednewPassword = (
         await bcrypt.hash(newPassword, salt)
       ).toString();
-      const verificationCode =
-        Math.floor(Math.random() * (10000 - 99999 + 1)) + 10000 + '';
+      const verificationCode = Math.floor(Math.random() * 90000) + 10000;
       const savedAttempt: PasswordChangementAttempt = {
         username: user.username,
         verificationCode,
@@ -74,8 +76,32 @@ export class AccountsService {
         user.email,
         verificationCode,
       );
-      return 'succussfull Attempt';
+      return { message: 'succussfull Attempt' } as PasswordUpdateResponseDto;
     } else
       throw new BadRequestException('Your current password provided is wrong');
+  }
+
+  async updatePasswordPhaseTwo(
+    payload: VerificationCodeRequestDto,
+    user: User,
+  ): Promise<VerificationCodeResponseDto> {
+    /**
+     * Retrive the attempt to change the password
+     * if there is non or the verification code does not match return error
+     * else change the account's password and return success
+     */
+    const attempt: PasswordChangementAttempt =
+      await this.passwordChangementRepo.findByUsername(user.username);
+    if (attempt.verificationCode !== payload.verificationCode)
+      throw new BadRequestException(
+        'Wrong Verification code, please recheck your email for the correct one',
+      );
+    else {
+      user.password = attempt.newPassword;
+      await this.userService.update(user._id, user);
+      return {
+        message: 'Password Updated Succesfully',
+      } as VerificationCodeResponseDto;
+    }
   }
 }

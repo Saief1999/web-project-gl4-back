@@ -27,7 +27,7 @@ export class MailService {
 
   async sendPasswordChangementVerificationCode(
     email: string,
-    verificationCode: string,
+    verificationCode: number,
   ) {
     await this.mailerService.sendMail({
       to: email,
