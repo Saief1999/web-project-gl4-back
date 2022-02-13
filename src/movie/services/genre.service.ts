@@ -13,15 +13,20 @@ export class GenreService extends BaseService<Genre>{
 
     private movieService:MovieService;
 
-    constructor(@InjectModel(Genre.name) model: SoftDeleteModel<Genre & Document>, movieService: MovieService) {
+    constructor(@InjectModel(Genre.name) model: SoftDeleteModel<Genre & Document>, movieService: MovieService
+    ) {
         super(model);
         this.movieService = movieService;
     }
 
+    /**
+     * Checks the TMDB for changes in genres (for movies) and updates our db
+     * @returns BulkWriteResult
+     */
     async refreshMoviesGenres() {
         //lastValueFrom : return the latest observer result as a promise (we only get one result anyway)
         const genresDto:GenreDto[] = await lastValueFrom(this.movieService.getGenres()) ; 
-        const genres = await this.model.bulkWrite(
+        const writeResult = await this.model.bulkWrite(
             genresDto.map((genre:GenreDto) => ({
                     updateOne: {
                         filter: { id: genre.id }, // select fields with this id
@@ -31,7 +36,7 @@ export class GenreService extends BaseService<Genre>{
                 })
             )
         )
-        return genres ;
+        return writeResult ;
     }
 
 

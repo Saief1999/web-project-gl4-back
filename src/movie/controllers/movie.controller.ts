@@ -12,8 +12,17 @@ export class MovieController {
 
     constructor(private readonly movieService:MovieService) {}
     @Get("/search")
-    search(@Query("query") query:string):Observable<ListResult<Movie>> {
-        return this.movieService.search(query);
+    search(@Query("query") query:string, @Query("page") page:number):Observable<ListResult<Movie>> {
+        return this.movieService.search(query, page);
+    }
+    @Get("top_rated")
+    listTopRated(@Query("page") page:number=1):Observable<ListResult<Movie>> {
+        return this.movieService.listTopRated(page);
+    }
+
+    @Get("popular")
+    listPopular(@Query("page") page:number=1):Observable<ListResult<Movie>> {
+        return this.movieService.listpopular(page);
     }
 
     @Get(":id")

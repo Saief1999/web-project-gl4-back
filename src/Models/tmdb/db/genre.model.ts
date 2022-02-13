@@ -9,6 +9,7 @@ export class Genre extends Base {
     _id: string;
 
     @IsNotEmpty()
+    @IsNumber()
     @Prop({ type: mongoose.Schema.Types.Number })
     id: number;
     

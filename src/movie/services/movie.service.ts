@@ -24,7 +24,7 @@ export class MovieService {
 
 
     getMovie(movieId:number): Observable<MovieDetails> {
-        return this.httpService.get(`${this.baseUrl}/movie/${movieId}`,
+        return this.httpService.get<MovieDetails>(`${this.baseUrl}/movie/${movieId}`,
             { params: this.defaultParams })
             .pipe(map( response =>{
                 return plainToInstance(MovieDetails, response.data) 
@@ -34,15 +34,16 @@ export class MovieService {
     getGenres() :Observable<GenreDto[]> {
         return this.httpService.get(`${this.baseUrl}/genre/movie/list`, {
             params: this.defaultParams})
-            .pipe(map(response => response.data))
+            .pipe(map(response => {
+                return response.data.genres}))
     }
 
     // getProviders(movieId:number):Observable<
 
-    search(query:string): Observable<ListResult<Movie>> {
+    search(query:string, page:number = 1): Observable<ListResult<Movie>> {
         // nestjs will subscribe to this observer and return the result to the client
         // if there is an error it will propagate till it gets returned
-        const params = {...this.defaultParams, query}
+        const params = {...this.defaultParams, query, page}
 
         return this.httpService.get(`${this.baseUrl}/search/movie`,
             { params }
@@ -52,6 +53,25 @@ export class MovieService {
             const  result:ListResult<Movie> =  plainToClassFromExist(new ListResult<Movie>(Movie), response.data) 
             return result ;
         })) 
+    }
+
+    private listMovies(uri:string , page:number = 1):Observable<ListResult<Movie>> {
+        const params = {...this.defaultParams, page}
+        return this.httpService.get(`${this.baseUrl}/${uri}`,
+            { params }
+        )
+        .pipe(map(response => { 
+            const  result:ListResult<Movie> =  plainToClassFromExist(new ListResult<Movie>(Movie), response.data) 
+            return result ;
+        })) 
+    }
+    
+    listpopular(page:number = 1): Observable<ListResult<Movie>> { 
+        return this.listMovies("movie/popular", page);
+    }
+
+    listTopRated(page:number = 1):Observable<ListResult<Movie>> {
+        return this.listMovies("movie/top_rated", page);
     }
 
 }
