@@ -3,8 +3,9 @@ import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { Base } from 'src/generics/db/base.model';
 
 @Schema({ timestamps: true, versionKey: false })
-export class PasswordChangementAttempt extends Base {
+export class EmailChangementAttempt extends Base {
   _id?: string;
+
   @Prop({ type: String, required: true })
   userId: string;
 
@@ -12,16 +13,16 @@ export class PasswordChangementAttempt extends Base {
   verificationCode: number;
 
   @Prop({ type: String, required: true })
-  newPassword: string;
+  newEmail: string;
 
   constructor() {
     super();
     this.userId = '';
     this.verificationCode = 0;
-    this.newPassword = '';
+    this.newEmail = '';
   }
 }
 
-export const PasswordChangementAttemptSchema = SchemaFactory.createForClass(
-  PasswordChangementAttempt,
+export const EmailChangementAttemptSchema = SchemaFactory.createForClass(
+  EmailChangementAttempt,
 ).plugin(softDeletePlugin);

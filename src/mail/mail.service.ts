@@ -36,4 +36,16 @@ export class MailService {
       context: { verificationCode },
     });
   }
+
+  async sendEmailChangementVerificationCode(
+    email: string,
+    verificationCode: number,
+  ) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Email Confirmation',
+      template: 'email-changement.hbs',
+      context: { verificationCode },
+    });
+  }
 }

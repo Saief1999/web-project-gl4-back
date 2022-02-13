@@ -6,6 +6,8 @@ import { RoleAuthGuard } from 'src/guards/role-auth.guard';
 import { User, UserRoleEnum } from 'src/Models/user.model';
 import { AccountUpdateRequestDto } from '../dto/account-update-request.dto';
 import { AccountUpdateResponseDto } from '../dto/account-update-response.dto';
+import { EmailUpdateRequestDto } from '../dto/email-update-request.dto';
+import { EmailUpdateResponseDto } from '../dto/email-update-response.dto';
 import { PasswordUpdateRequestDto } from '../dto/password-update-request.dto';
 import { PasswordUpdateResponseDto } from '../dto/password-update-response.dto';
 import { VerificationCodeRequestDto } from '../dto/verification-code-request.dto';
@@ -51,5 +53,25 @@ export class AccountsController {
     @GetUser() user: User,
   ): Promise<VerificationCodeResponseDto> {
     return this.accountService.updatePasswordPhaseTwo(payload, user);
+  }
+
+  @Post('me/email')
+  @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
+  @Role(UserRoleEnum.user)
+  async updateEmailMe(
+    @Body() payload: EmailUpdateRequestDto,
+    @GetUser() user: User,
+  ): Promise<EmailUpdateResponseDto> {
+    return this.accountService.updateEmailPhaseOne(user, payload);
+  }
+
+  @Put('me/email/confirm')
+  @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
+  @Role(UserRoleEnum.user)
+  async confirmUpdateEmailMe(
+    @Body() payload: VerificationCodeRequestDto,
+    @GetUser() user: User,
+  ): Promise<AccountUpdateResponseDto> {
+    return this.accountService.updateEmailPhaseTwo(payload, user);
   }
 }

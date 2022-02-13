@@ -3,25 +3,24 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { BaseService } from 'src/generics/services/base.service';
-import { PasswordChangementAttempt } from 'src/Models/password-changement-attempt.model';
+import { EmailChangementAttempt } from 'src/Models/email-changement-attempt.model';
 
 @Injectable()
-export class PasswordChangementAttemptService extends BaseService<PasswordChangementAttempt> {
+export class EmailChangementAttemptService extends BaseService<EmailChangementAttempt> {
   constructor(
-    @InjectModel(PasswordChangementAttempt.name)
-    model: SoftDeleteModel<PasswordChangementAttempt & Document>,
+    @InjectModel(EmailChangementAttempt.name)
+    model: SoftDeleteModel<EmailChangementAttempt & Document>,
   ) {
     super(model);
   }
+
   public async existsByUserId(userId: string): Promise<boolean> {
     const exists = await this.model.exists({ userId });
     return exists;
   }
 
-  public async findByUserId(
-    userId: string,
-  ): Promise<PasswordChangementAttempt> {
-    const attempt: PasswordChangementAttempt = await this.model.findOne({
+  public async findByUserId(userId: string): Promise<EmailChangementAttempt> {
+    const attempt: EmailChangementAttempt = await this.model.findOne({
       userId,
     });
     if (!attempt) {
