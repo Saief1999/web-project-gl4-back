@@ -1,10 +1,11 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
-import { plainToClass, plainToClassFromExist, plainToInstance } from "class-transformer";
+import { plainToClassFromExist, plainToInstance } from "class-transformer";
 import { map, Observable, tap } from "rxjs";
-import { ListResult } from "src/Models/tmdb/list-result";
-import { Movie } from "src/Models/tmdb/movie";
-import { MovieDetails } from "src/Models/tmdb/movie-details";
+import { GenreDto } from "../dto/genre-dto";
+import { ListResult } from "../dto/list-result";
+import { Movie } from "../dto/movie";
+import { MovieDetails } from "../dto/movie-details";
 
 @Injectable()
 export class MovieService {
@@ -30,6 +31,12 @@ export class MovieService {
             }))
     }
 
+    getGenres() :Observable<GenreDto[]> {
+        return this.httpService.get(`${this.baseUrl}/genre/movie/list`, {
+            params: this.defaultParams})
+            .pipe(map(response => response.data))
+    }
+
     // getProviders(movieId:number):Observable<
 
     search(query:string): Observable<ListResult<Movie>> {
@@ -42,7 +49,8 @@ export class MovieService {
         )
         .pipe(map(response => { 
             // needed to transform the result, from a normal pojo to a MoviesList
-            return plainToClassFromExist(new ListResult<Movie>(Movie), response.data) 
+            const  result:ListResult<Movie> =  plainToClassFromExist(new ListResult<Movie>(Movie), response.data) 
+            return result ;
         })) 
     }
 

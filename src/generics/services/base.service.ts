@@ -13,6 +13,12 @@ export class BaseService<Schema extends Base> {
     return schema;
   }
 
+  async findOneBy(filter: FilterQuery<Schema & Document>={}, projection: any | null = null) {
+    const schema:Schema = await this.model.findOne(filter, projection).exec();
+    if (!schema) throw new NotFoundException();
+    return schema;
+  }
+
   async findAll(filter: FilterQuery<Schema & Document> = {}, projection: any | null = null): Promise<Schema[]> {
     return this.model.find(filter, projection).exec();
   }
