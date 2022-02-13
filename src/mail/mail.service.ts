@@ -24,4 +24,16 @@ export class MailService {
       context: { ...payload, link },
     });
   }
+
+  async sendPasswordChangementVerificationCode(
+    email: string,
+    verificationCode: string,
+  ) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Email Confirmation',
+      template: 'password-changement.hbs',
+      context: { verificationCode },
+    });
+  }
 }

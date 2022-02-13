@@ -3,14 +3,27 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { AuthenticationModule } from 'src/authentication/authentication.module';
+import { MailModule } from 'src/mail/mail.module';
+import {
+  PasswordChangementAttempt,
+  PasswordChangementAttemptSchema,
+} from 'src/Models/password-changement-attempt.model';
 import { User, UserSchema } from 'src/Models/user.model';
 import { AccountsController } from './controllers/accounts.controller';
 import { AccountsService } from './services/accounts.service';
+import { PasswordChangementAttemptService } from './services/password-changement-attempt.service';
 
 @Module({
   imports: [
     AuthenticationModule,
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      {
+        name: PasswordChangementAttempt.name,
+        schema: PasswordChangementAttemptSchema,
+      },
+    ]),
+    MailModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: process.env.SECRET,
@@ -20,6 +33,6 @@ import { AccountsService } from './services/accounts.service';
     }),
   ],
   controllers: [AccountsController],
-  providers: [AccountsService],
+  providers: [AccountsService, PasswordChangementAttemptService],
 })
 export class AccountsModule {}
