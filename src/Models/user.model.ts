@@ -77,8 +77,7 @@ export class User extends Base {
   gender?: GenderEnum;
 
   @Prop({ type: String, default: '' })
-  @Matches(/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/)
-  @IsOptional()
+  @Matches(/^$|^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/)
   birthday?: string;
 }
 

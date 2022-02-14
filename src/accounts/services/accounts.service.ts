@@ -31,12 +31,14 @@ export class AccountsService {
     user: User,
     payload: AccountUpdateRequestDto,
   ): Promise<AccountUpdateResponseDto> {
-    // valid payload and you are loged in
-    // get the user
-    // update it
-    // save the user
-    // recreate the token
-    // return the new user and the token
+    if (user.username !== payload.username) {
+      const usernameTaken: boolean = await this.userService.existsByUsername(
+        payload.username,
+      );
+      if (usernameTaken) {
+        throw new BadRequestException('The username is Provided already taken');
+      }
+    }
     const newUser = await this.userService.update(user._id, payload);
     const data = this.authenticationService.createJwtToken(newUser);
     return { token: data.token, user: newUser };
@@ -112,6 +114,10 @@ export class AccountsService {
     payload: EmailUpdateRequestDto,
   ): Promise<EmailUpdateResponseDto> {
     const { newEmail } = payload;
+    const emailUsed = await this.userService.existsByEmail(newEmail);
+    if (emailUsed) {
+      throw new BadRequestException('Email already used');
+    }
     const verificationCode = Math.floor(Math.random() * 90000) + 10000;
     const savedAttempt: EmailChangementAttempt = {
       userId: user._id,
