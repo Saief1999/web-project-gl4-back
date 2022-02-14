@@ -16,10 +16,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { hostname } from 'os';
 import { join } from 'path';
-import { Role } from '../../decorators/role-metadata.decorator';
-import { RoleAuthGuard } from '../../guards/role-auth.guard';
-import { app } from '../../main';
-import { Cinema } from '../../Models/cinema.model';
+import { Role } from 'src/decorators/role-metadata.decorator';
+import { RoleAuthGuard } from 'src/guards/role-auth.guard';
+import { app } from 'src/main';
+import { Cinema } from 'src/Models/cinema.model';
 import { UserRoleEnum } from 'src/Models/user.model';
 import {
   cinemaImageName,

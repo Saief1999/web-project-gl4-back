@@ -12,6 +12,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path/posix';
 import { uploadDestination } from './utilities/upload';
+import { MovieModule } from './movie/movie.module';
 
 @Module({
   imports: [
@@ -24,7 +25,11 @@ import { uploadDestination } from './utilities/upload';
     AuthenticationModule,
     CinemaModule,
     MailModule,
+<<<<<<< HEAD
+    MovieModule,
+=======
     AccountsModule,
+>>>>>>> main
     MulterModule.register({}), // File upload
     ServeStaticModule.forRoot({
       rootPath: uploadDestination,
