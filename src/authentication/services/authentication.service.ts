@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { User, UserRoleEnum } from 'src/Models/user.model';
+import { User } from 'src/Models/user.model';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { AuthenticationTokenPayloadDto } from '../dto/payload.dto';
@@ -19,10 +19,19 @@ export class AuthenticationService {
   ) {}
 
   public async login(loginData: LoginDto): Promise<AuthenticationResponseDto> {
-    const { email, password } = loginData;
-    const user: User = await this.userRepository.findByEmail(email);
-    if (!user) {
-      throw new BadRequestException('email does not match an exisiting user');
+    const { login, password } = loginData;
+    let user: User;
+    const existsbyEmail: boolean = await this.userRepository.existsByEmail(
+      login,
+    );
+    if (!existsbyEmail) {
+      const existsByUsername: boolean =
+        await this.userRepository.existsByUsername(login);
+      if (!existsByUsername)
+        throw new BadRequestException('No user Found with this login');
+      user = await this.userRepository.findByUsername(login);
+    } else {
+      user = await this.userRepository.findByEmail(login);
     }
     const isAuthenticated = await bcrypt.compare(password, user.password);
     if (!isAuthenticated) {
@@ -48,14 +57,14 @@ export class AuthenticationService {
     }
     const salt = await bcrypt.genSalt();
     const savedPassword = (await bcrypt.hash(password, salt)).toString();
-    const newUser: User = {
+    const user: User = {
       username,
       firstname,
       lastname,
       email,
       password: savedPassword,
     };
-    this.userRepository.create(newUser);
+    const newUser = await this.userRepository.create(user);
     const emailPayload: EmailConfirmationPayloadDto = {
       username,
       firstname,
@@ -67,9 +76,11 @@ export class AuthenticationService {
 
   createJwtToken(user: User): AuthenticationResponseDto {
     const payload: AuthenticationTokenPayloadDto = {
+      _id: user._id,
       email: user.email,
-      password: user.password,
-      role: UserRoleEnum.user,
+      username: user.username,
+      activated: user.activated,
+      role: user.role,
     };
     const jwt = this.jwtService.sign(payload);
     return { token: jwt } as AuthenticationResponseDto;

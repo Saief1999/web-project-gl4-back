@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { CinemaModule } from './cinema/cinema.module';
 import { MailModule } from './mail/mail.module';
+import { AccountsModule } from './accounts/accounts.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path/posix';
@@ -24,13 +25,15 @@ import { MovieModule } from './movie/movie.module';
     AuthenticationModule,
     CinemaModule,
     MailModule,
+<<<<<<< HEAD
     MovieModule,
+=======
+    AccountsModule,
+>>>>>>> main
     MulterModule.register({}), // File upload
-    ServeStaticModule.forRoot(
-      {
-        rootPath: uploadDestination
-      }
-    )
+    ServeStaticModule.forRoot({
+      rootPath: uploadDestination,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

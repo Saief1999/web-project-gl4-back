@@ -33,6 +33,6 @@ import { JwtStrategy } from './strategy/jwt.strategy';
     EmailConfirmationService,
     JwtStrategy,
   ],
-  exports: [UserService],
+  exports: [UserService, AuthenticationService],
 })
 export class AuthenticationModule {}
