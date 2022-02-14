@@ -1,9 +1,28 @@
-import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  StreamableFile,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { userInfo } from 'os';
+import { join } from 'path';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { Role } from 'src/decorators/role-metadata.decorator';
 import { RoleAuthGuard } from 'src/guards/role-auth.guard';
 import { User, UserRoleEnum } from 'src/Models/user.model';
+import {
+  imageFileFilter,
+  uploadDestination,
+  userImageName,
+} from 'src/utilities/upload';
 import { AccountUpdateRequestDto } from '../dto/account-update-request.dto';
 import { AccountUpdateResponseDto } from '../dto/account-update-response.dto';
 import { EmailUpdateRequestDto } from '../dto/email-update-request.dto';
@@ -73,5 +92,28 @@ export class AccountsController {
     @GetUser() user: User,
   ): Promise<AccountUpdateResponseDto> {
     return this.accountService.updateEmailPhaseTwo(payload, user);
+  }
+
+  @Post('me/image')
+  @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
+  @Role(UserRoleEnum.user)
+  @UseInterceptors(
+    FileInterceptor('newImage', {
+      storage: diskStorage({
+        destination: join(uploadDestination, 'uploads', 'users'),
+        filename: userImageName,
+      }),
+      fileFilter: imageFileFilter,
+      limits: {
+        fileSize: 10000000, // 10 MB
+      },
+    }),
+  )
+  async updateImageMe(
+    @GetUser() user: User,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<AccountUpdateResponseDto> {
+    const imagePath = `http://localhost:3000/uploads/users/${file.filename}`;
+    return this.accountService.updateProfileImage(user, imagePath);
   }
 }

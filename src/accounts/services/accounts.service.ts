@@ -152,4 +152,18 @@ export class AccountsService {
       return { token: data.token, user: newUser };
     }
   }
+
+  async updateProfileImage(
+    user: User,
+    imagePath: string,
+  ): Promise<AccountUpdateResponseDto> {
+    if (imagePath === '') {
+      throw new BadRequestException('image not well provided');
+    } else {
+      user.profileImage = imagePath;
+      const newUser = await this.userService.update(user._id, user);
+      const data = this.authenticationService.createJwtToken(newUser);
+      return { token: data.token, user: newUser };
+    }
+  }
 }
