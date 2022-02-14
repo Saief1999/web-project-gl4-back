@@ -25,11 +25,8 @@ import { MovieModule } from './movie/movie.module';
     AuthenticationModule,
     CinemaModule,
     MailModule,
-<<<<<<< HEAD
     MovieModule,
-=======
     AccountsModule,
->>>>>>> main
     MulterModule.register({}), // File upload
     ServeStaticModule.forRoot({
       rootPath: uploadDestination,
