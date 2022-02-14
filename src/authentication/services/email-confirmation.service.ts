@@ -5,6 +5,7 @@ import { User } from 'src/Models/user.model';
 import { UserService } from './user.service';
 import { MailService } from '../../mail/mail.service';
 import { EmailConfirmationPayloadDto } from '../dto/email-confirmation-payload.dto';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable()
 export class EmailConfirmationService {
@@ -12,9 +13,10 @@ export class EmailConfirmationService {
     private readonly jwtService: JwtService,
     private readonly userRepository: UserService,
     private readonly mailService: MailService,
+    private readonly authService: AuthenticationService,
   ) {}
 
-  public async confirmEmail(token: string): Promise<void> {
+  public async confirmEmail(token: string): Promise<any> {
     const email = await this.decodeEmailfromToken(token);
     const user: User = await this.userRepository.findByEmail(email);
     if (!user) {
@@ -25,7 +27,9 @@ export class EmailConfirmationService {
     if (user.activated)
       throw new BadRequestException({ message: 'Account already activated' });
     user.activated = true;
-    this.userRepository.update(user._id, user);
+    const newUser: User = await this.userRepository.update(user._id, user);
+    const newToken = this.authService.createJwtToken(newUser).token;
+    return { message: 'Email Confirmed Successfully', token: newToken };
   }
 
   public async decodeEmailfromToken(token: string): Promise<string> {
