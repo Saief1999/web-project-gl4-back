@@ -40,14 +40,16 @@ export class AuthenticationController {
     @Body() params: AuthenticationResponseDto,
   ): Promise<any> {
     const { token } = params;
-    await this.emailConfirmationService.confirmEmail(token);
-    return { message: 'Email Confirmed Successfully' };
+    return await this.emailConfirmationService.confirmEmail(token);
   }
 
   @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
   @Role(UserRoleEnum.user)
   @Get('resend-confirmation-link')
-  public async resendConfirmationLink(@GetUser() user: User): Promise<void> {
+  public async resendConfirmationLink(@GetUser() user: User): Promise<any> {
     await this.emailConfirmationService.resendEmailConfirmation(user);
+    return {
+      message: 'You now received an email with a link to verify your account',
+    };
   }
 }

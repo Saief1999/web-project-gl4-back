@@ -19,10 +19,19 @@ export class AuthenticationService {
   ) {}
 
   public async login(loginData: LoginDto): Promise<AuthenticationResponseDto> {
-    const { email, password } = loginData;
-    const user: User = await this.userRepository.findByEmail(email);
-    if (!user) {
-      throw new BadRequestException('email does not match an exisiting user');
+    const { login, password } = loginData;
+    let user: User;
+    const existsbyEmail: boolean = await this.userRepository.existsByEmail(
+      login,
+    );
+    if (!existsbyEmail) {
+      const existsByUsername: boolean =
+        await this.userRepository.existsByUsername(login);
+      if (!existsByUsername)
+        throw new BadRequestException('No user Found with this login');
+      user = await this.userRepository.findByUsername(login);
+    } else {
+      user = await this.userRepository.findByEmail(login);
     }
     const isAuthenticated = await bcrypt.compare(password, user.password);
     if (!isAuthenticated) {

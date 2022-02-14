@@ -1,3 +1,9 @@
-import { PickType } from '@nestjs/mapped-types';
-import { User } from 'src/Models/user.model';
-export class LoginDto extends PickType(User, ['email', 'password']) {}
+import { IsNotEmpty, MinLength } from 'class-validator';
+
+export class LoginDto {
+  @IsNotEmpty()
+  login: string;
+  @IsNotEmpty()
+  @MinLength(5, { message: 'A password with 5 chars at least is required' })
+  password: string;
+}
