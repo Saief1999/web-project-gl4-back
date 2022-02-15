@@ -74,9 +74,7 @@ export class CinemaController {
     @UploadedFile() file: Express.Multer.File,
   ): Promise<CinemaImageDto> {
     // We need to find a way to get the domain name/port of the server dynamically
-    return new CinemaImageDto(
-      join('http://localhost:3000', 'uploads', 'cinemas', file.filename),
-    );
+    return new CinemaImageDto(`http://localhost:3000/uploads/cinemas/${file.filename}`);
   }
 
   @Role(UserRoleEnum.admin)
