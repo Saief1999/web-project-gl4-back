@@ -16,7 +16,7 @@ export class HomeController {
   }
 
   @Post('admins/contact')
-  @Role(UserRoleEnum.user)
+  @Role(UserRoleEnum.user, UserRoleEnum.admin)
   @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
   sendEmailsToAdmins(
     @Body() payload: sendEmailAdminRequestDto,
