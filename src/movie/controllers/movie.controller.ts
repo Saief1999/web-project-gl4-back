@@ -1,8 +1,10 @@
-import { ClassSerializerInterceptor, Controller, Get, Param, Query, UseInterceptors } from "@nestjs/common";
-import { map, Observable } from "rxjs";
+import { Body, ClassSerializerInterceptor, Controller, Get, Param, Put, Query, UseInterceptors } from "@nestjs/common";
+import { lastValueFrom, map, Observable } from "rxjs";
+import { PlanningService } from "src/planning/service/planning.service";
 import { ListResult } from "../dto/list-result";
 import { Movie } from "../dto/movie";
 import { MovieDetails } from "../dto/movie-details";
+import { ScrappedMoviePlanning } from "../dto/scrapped-movie-planning";
 
 import { MovieService } from "../services/movie.service";
 
@@ -29,5 +31,4 @@ export class MovieController {
     getMovie(@Param("id") movieId:number):Observable<MovieDetails> {
         return this.movieService.getMovie(movieId);
     }
-
 }

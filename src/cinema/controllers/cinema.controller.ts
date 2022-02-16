@@ -75,7 +75,7 @@ export class CinemaController {
   ): Promise<CinemaImageDto> {
     // We need to find a way to get the domain name/port of the server dynamically
     return new CinemaImageDto(
-      join('http://localhost:3000', 'uploads', 'cinemas', file.filename),
+      `http://localhost:3000/uploads/cinemas/${file.filename}`,
     );
   }
 

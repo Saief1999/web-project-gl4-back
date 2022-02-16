@@ -19,7 +19,10 @@ export class BaseService<Schema extends Base> {
     return schema;
   }
 
-  async findAll(filter: FilterQuery<Schema & Document> = {}, projection: any | null = null): Promise<Schema[]> {
+  async findAll(filter: FilterQuery<Schema & Document> = {}, projection: any | null = null, populate:string|object|null=null): Promise<Schema[]> {
+    if (populate !== null) { 
+      return this.model.find(filter, projection).populate(populate).exec();
+    }
     return this.model.find(filter, projection).exec();
   }
 
