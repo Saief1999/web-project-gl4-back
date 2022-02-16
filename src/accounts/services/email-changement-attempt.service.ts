@@ -15,7 +15,7 @@ export class EmailChangementAttemptService extends BaseService<EmailChangementAt
   }
 
   public async existsByUserId(userId: string): Promise<boolean> {
-    const exists = await this.model.exists({ userId });
+    const exists = await this.model.findOne({ userId }).exec()!=null;
     return exists;
   }
 

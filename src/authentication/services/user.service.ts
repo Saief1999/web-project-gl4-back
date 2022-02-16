@@ -23,10 +23,12 @@ export class UserService extends BaseService<User> {
   }
 
   async existsByEmail(email: string): Promise<boolean> {
-    return this.model.exists({ email });
+    const user:User = await this.model.findOne({ email }).exec(); 
+    return user!=null;
   }
 
   async existsByUsername(username: string): Promise<boolean> {
-    return this.model.exists({ username });
+    const user:User = await this.model.findOne({ username }).exec(); 
+    return user!=null;
   }
 }
