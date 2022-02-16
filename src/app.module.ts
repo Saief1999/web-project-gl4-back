@@ -13,7 +13,11 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path/posix';
 import { uploadDestination } from './utilities/upload';
 import { MovieModule } from './movie/movie.module';
+<<<<<<< HEAD
+import { PlanningModule } from './planning/planning.module';
+=======
 import { HomeModule } from './home/home.module';
+>>>>>>> main
 
 @Module({
   imports: [
@@ -28,6 +32,7 @@ import { HomeModule } from './home/home.module';
     MailModule,
     MovieModule,
     AccountsModule,
+    PlanningModule,
     MulterModule.register({}), // File upload
     ServeStaticModule.forRoot({
       rootPath: uploadDestination,
