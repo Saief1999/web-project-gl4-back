@@ -13,6 +13,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path/posix';
 import { uploadDestination } from './utilities/upload';
 import { MovieModule } from './movie/movie.module';
+import { HomeModule } from './home/home.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { MovieModule } from './movie/movie.module';
     ServeStaticModule.forRoot({
       rootPath: uploadDestination,
     }),
+    HomeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
