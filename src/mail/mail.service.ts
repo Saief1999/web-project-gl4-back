@@ -56,7 +56,7 @@ export class MailService {
   ): Promise<void> {
     await this.mailerService.sendMail({
       to: email,
-      subject: 'Opinion Coming from The WHERE TO WATCH APP',
+      subject: 'Opinion Coming from The WATCH NEAR APP',
       template: 'user-opinion.hbs',
       context: { from, message },
     });
