@@ -48,4 +48,17 @@ export class MailService {
       context: { verificationCode },
     });
   }
+
+  async sendCustomEmail(
+    email: string,
+    message: string,
+    from: string,
+  ): Promise<void> {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Opinion Coming from The WHERE TO WATCH APP',
+      template: 'user-opinion.hbs',
+      context: { from, message },
+    });
+  }
 }
