@@ -1,4 +1,3 @@
-import { UserService } from './authentication/services/user.service';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -10,7 +9,6 @@ import { MailModule } from './mail/mail.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path/posix';
 import { uploadDestination } from './utilities/upload';
 import { MovieModule } from './movie/movie.module';
 import { PlanningModule } from './planning/planning.module';

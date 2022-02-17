@@ -14,7 +14,7 @@ export class PasswordChangementAttemptService extends BaseService<PasswordChange
     super(model);
   }
   public async existsByUserId(userId: string): Promise<boolean> {
-    const exists = await this.model.findOne({ userId }).exec()!=null;
+    const exists = (await this.model.findOne({ userId }).exec()) != null;
     return exists;
   }
 

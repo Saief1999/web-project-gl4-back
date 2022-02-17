@@ -37,14 +37,14 @@ export class AccountsController {
 
   @Get('me')
   @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
-  @Role(UserRoleEnum.user,UserRoleEnum.admin)
+  @Role(UserRoleEnum.user, UserRoleEnum.admin)
   me(@GetUser() user: User): User {
     return user;
   }
 
   @Put('me')
   @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
-  @Role(UserRoleEnum.user,UserRoleEnum.admin)
+  @Role(UserRoleEnum.user, UserRoleEnum.admin)
   async updateMe(
     @Body() payload: AccountUpdateRequestDto,
     @GetUser() user: User,
@@ -54,7 +54,7 @@ export class AccountsController {
 
   @Post('me/password')
   @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
-  @Role(UserRoleEnum.user,UserRoleEnum.admin)
+  @Role(UserRoleEnum.user, UserRoleEnum.admin)
   async updatePasswordMe(
     @Body() payload: PasswordUpdateRequestDto,
     @GetUser() user: User,
@@ -64,7 +64,7 @@ export class AccountsController {
 
   @Put('me/password/confirm')
   @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
-  @Role(UserRoleEnum.user,UserRoleEnum.admin)
+  @Role(UserRoleEnum.user, UserRoleEnum.admin)
   async confirmUpdatePasswordMe(
     @Body() payload: VerificationCodeRequestDto,
     @GetUser() user: User,
@@ -74,7 +74,7 @@ export class AccountsController {
 
   @Post('me/email')
   @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
-  @Role(UserRoleEnum.user,UserRoleEnum.admin)
+  @Role(UserRoleEnum.user, UserRoleEnum.admin)
   async updateEmailMe(
     @Body() payload: EmailUpdateRequestDto,
     @GetUser() user: User,
@@ -84,7 +84,7 @@ export class AccountsController {
 
   @Put('me/email/confirm')
   @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
-  @Role(UserRoleEnum.user,UserRoleEnum.admin)
+  @Role(UserRoleEnum.user, UserRoleEnum.admin)
   async confirmUpdateEmailMe(
     @Body() payload: VerificationCodeRequestDto,
     @GetUser() user: User,
@@ -94,7 +94,7 @@ export class AccountsController {
 
   @Post('me/image')
   @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
-  @Role(UserRoleEnum.user,UserRoleEnum.admin)
+  @Role(UserRoleEnum.user, UserRoleEnum.admin)
   @UseInterceptors(
     FileInterceptor('newImage', {
       storage: diskStorage({
