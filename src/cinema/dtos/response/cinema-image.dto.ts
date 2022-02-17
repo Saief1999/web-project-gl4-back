@@ -1,10 +1,10 @@
-import { IsUrl } from "class-validator";
+import { IsUrl } from 'class-validator';
 
 export class CinemaImageDto {
-    @IsUrl()
-    imageUrl:string;
+  @IsUrl()
+  imageUrl: string;
 
-    constructor(imageUrl:string) {
-        this.imageUrl = imageUrl ; 
-    }
+  constructor(imageUrl: string) {
+    this.imageUrl = imageUrl;
+  }
 }

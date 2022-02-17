@@ -1,4 +1,4 @@
 export class GenreDto {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 }

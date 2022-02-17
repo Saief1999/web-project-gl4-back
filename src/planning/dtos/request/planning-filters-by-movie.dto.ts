@@ -1,16 +1,15 @@
-import { IsDateString, IsNotEmpty, IsNumberString } from "class-validator";
+import { IsDateString, IsNotEmpty, IsNumberString } from 'class-validator';
 
-export class PlanningFiltersByMovie{
+export class PlanningFiltersByMovie {
+  @IsNumberString()
+  @IsNotEmpty()
+  id: number;
 
-    @IsNumberString()
-    @IsNotEmpty()
-    id: number;
+  @IsDateString()
+  @IsNotEmpty()
+  start: Date;
 
-    @IsDateString()
-    @IsNotEmpty()
-    start: Date;
-
-    @IsDateString()
-    @IsNotEmpty()
-    end: Date;
+  @IsDateString()
+  @IsNotEmpty()
+  end: Date;
 }
