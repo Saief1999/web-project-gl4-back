@@ -1,4 +1,4 @@
-import { Exclude } from 'class-transformer';
+import { Exclude } from "class-transformer";
 
 export class Movie {
   poster_path: string | null;

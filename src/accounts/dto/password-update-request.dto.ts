@@ -1,5 +1,5 @@
-import { IsNotEmpty, MinLength } from 'class-validator';
-import { Match } from 'src/decorators/match.decorator';
+import { IsNotEmpty, MinLength } from "class-validator";
+import { Match } from "src/decorators/match.decorator";
 
 export class PasswordUpdateRequestDto {
   @IsNotEmpty()
@@ -10,6 +10,6 @@ export class PasswordUpdateRequestDto {
   newPassword: string;
   @IsNotEmpty()
   @MinLength(5)
-  @Match('newPassword')
+  @Match("newPassword")
   confirmPassword: string;
 }

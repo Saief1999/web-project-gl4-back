@@ -1,17 +1,15 @@
 import { Prop } from "@nestjs/mongoose";
 
-
-
 export class Base {
-    @Prop() 
-    createdAt?: Date
+  @Prop()
+  createdAt?: Date;
 
-    @Prop()
-    updatedAt?:Date
+  @Prop()
+  updatedAt?: Date;
 
-    @Prop()
-    deletedAt?:Date
+  @Prop()
+  deletedAt?: Date;
 
-    @Prop()
-    isDeleted?:boolean
+  @Prop()
+  isDeleted?: boolean;
 }

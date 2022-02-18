@@ -1,10 +1,9 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Mongoose } from 'mongoose';
-import * as mongoose from 'mongoose';
-import { Base } from 'src/generics/db/base.model';
-import { IsNotEmpty, IsNumber, IsOptional, Matches } from 'class-validator';
-import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
-import { IsGreaterThan } from 'src/decorators/match.decorator';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import * as mongoose from "mongoose";
+import { Base } from "src/generics/db/base.model";
+import { IsNotEmpty, IsNumber, IsOptional, Matches } from "class-validator";
+import { softDeletePlugin } from "soft-delete-plugin-mongoose";
+import { IsGreaterThan } from "src/decorators/match.decorator";
 
 @Schema({ timestamps: true, versionKey: false })
 export class Cinema extends Base {
@@ -33,8 +32,8 @@ export class Cinema extends Base {
   openingTime: string;
 
   @Matches(/^(([01][0-9])|(2[0-3])):[0-5][0-9]$/)
-  @IsGreaterThan('openingTime', {
-    message: 'closing time must be greater than opening time',
+  @IsGreaterThan("openingTime", {
+    message: "closing time must be greater than opening time"
   })
   @IsOptional()
   @Prop({ type: mongoose.Schema.Types.String })

@@ -1,4 +1,4 @@
-import { IsDateString, IsNotEmpty, IsNumberString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsNumberString } from "class-validator";
 
 export class PlanningFiltersByMovie {
   @IsNumberString()

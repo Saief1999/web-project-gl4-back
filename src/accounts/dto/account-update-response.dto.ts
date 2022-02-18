@@ -1,6 +1,6 @@
-import { User } from 'src/Models/user.model';
+import { User } from "src/Models/user.model";
 
 export class AccountUpdateResponseDto {
-  token = '';
+  token = "";
   user: User = new User();
 }
