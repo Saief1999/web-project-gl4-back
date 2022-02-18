@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Exclude, Type } from 'class-transformer';
+import { Exclude, Type } from "class-transformer";
 
 export class ListResult<T> {
   @Exclude()

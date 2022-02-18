@@ -1,3 +1,3 @@
 export class PasswordUpdateResponseDto {
-  message: string = '';
+  message: string = "";
 }

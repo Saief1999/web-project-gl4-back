@@ -16,11 +16,13 @@ module.exports = {
   },
   ignorePatterns: ['.eslintrc.js'],
   rules: {
-    'prettier/prettier': [
-      'warn',
+    "prettier/prettier": [
+      "warn",
       {
-        'tabWidth': 2,
-        'endOfLine': 'auto',
+        "tabWidth": 2,
+        "endOfLine": "lf",
+        "singleQuote": false,
+        "trailingComma": "none"          
       }
     ],
     '@typescript-eslint/interface-name-prefix': 'off',

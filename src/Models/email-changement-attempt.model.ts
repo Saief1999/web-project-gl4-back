@@ -1,6 +1,6 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
-import { Base } from 'src/generics/db/base.model';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { softDeletePlugin } from "soft-delete-plugin-mongoose";
+import { Base } from "src/generics/db/base.model";
 
 @Schema({ timestamps: true, versionKey: false })
 export class EmailChangementAttempt extends Base {
@@ -17,12 +17,12 @@ export class EmailChangementAttempt extends Base {
 
   constructor() {
     super();
-    this.userId = '';
+    this.userId = "";
     this.verificationCode = 0;
-    this.newEmail = '';
+    this.newEmail = "";
   }
 }
 
 export const EmailChangementAttemptSchema = SchemaFactory.createForClass(
-  EmailChangementAttempt,
+  EmailChangementAttempt
 ).plugin(softDeletePlugin);

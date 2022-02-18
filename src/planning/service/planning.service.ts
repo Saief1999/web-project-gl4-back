@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import { BaseService } from 'src/generics/services/base.service';
-import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
-import { MoviePlanning } from 'src/Models/movie-planning.model';
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Document } from "mongoose";
+import { BaseService } from "src/generics/services/base.service";
+import { SoftDeleteModel } from "soft-delete-plugin-mongoose";
+import { MoviePlanning } from "src/Models/movie-planning.model";
 
 @Injectable()
 export class PlanningService extends BaseService<MoviePlanning> {
   constructor(
     @InjectModel(MoviePlanning.name)
-    model: SoftDeleteModel<MoviePlanning & Document>,
+    model: SoftDeleteModel<MoviePlanning & Document>
   ) {
     super(model);
   }

@@ -1,4 +1,4 @@
-import { Movie } from './movie';
+import { Movie } from "./movie";
 
 export class MovieDetails extends Movie {
   belongs_to_collection: null | object;
@@ -32,9 +32,9 @@ class Language {
 }
 
 type status =
-  | 'Rumored'
-  | 'Planned'
-  | 'In Production'
-  | 'Post Production'
-  | 'Released'
-  | 'Canceled';
+  | "Rumored"
+  | "Planned"
+  | "In Production"
+  | "Post Production"
+  | "Released"
+  | "Canceled";

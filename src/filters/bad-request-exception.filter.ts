@@ -3,10 +3,10 @@ import {
   BadRequestException,
   Catch,
   ExceptionFilter,
-  HttpStatus,
-} from '@nestjs/common';
+  HttpStatus
+} from "@nestjs/common";
 
-import { Response } from 'express';
+import { Response } from "express";
 
 @Catch(BadRequestException)
 export class BadRequestExceptionFilter<BadRequestException>
@@ -18,7 +18,7 @@ export class BadRequestExceptionFilter<BadRequestException>
 
     response.status(HttpStatus.BAD_REQUEST).json({
       statusCode: HttpStatus.BAD_REQUEST,
-      message: "Credentials provided doesn't match an exisiting user",
+      message: "Credentials provided doesn't match an exisiting user"
     });
     return response;
   }

@@ -1,15 +1,15 @@
-import { PickType } from '@nestjs/mapped-types';
-import { Cinema } from 'src/Models/cinema.model';
-import { getTimeFromTimezone } from 'src/utilities/time';
+import { PickType } from "@nestjs/mapped-types";
+import { Cinema } from "src/Models/cinema.model";
+import { getTimeFromTimezone } from "src/utilities/time";
 
 export class CinemaListItem extends PickType(Cinema, [
-  '_id',
-  'name',
-  'description',
-  'imageUrl',
+  "_id",
+  "name",
+  "description",
+  "imageUrl"
 ]) {
   isOpen: boolean = true;
-  imageUrl: string = '';
+  imageUrl: string = "";
   constructor(cinema: Cinema) {
     super();
 
@@ -18,7 +18,7 @@ export class CinemaListItem extends PickType(Cinema, [
     this.description = cinema.description;
     this.imageUrl = cinema.imageUrl;
 
-    const currentTime: string = getTimeFromTimezone('Africa/Tunis'); // the tunisian time
+    const currentTime: string = getTimeFromTimezone("Africa/Tunis"); // the tunisian time
     this.isOpen =
       currentTime > cinema.openingTime && currentTime < cinema.closingTime;
   }

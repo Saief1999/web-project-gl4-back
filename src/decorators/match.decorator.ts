@@ -3,8 +3,8 @@ import {
   ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
-  ValidatorConstraintInterface,
-} from 'class-validator';
+  ValidatorConstraintInterface
+} from "class-validator";
 
 export function Match(property: string, validationOptions?: ValidationOptions) {
   return (object: any, propertyName: string) => {
@@ -13,12 +13,12 @@ export function Match(property: string, validationOptions?: ValidationOptions) {
       propertyName,
       options: validationOptions,
       constraints: [property],
-      validator: MatchConstraint,
+      validator: MatchConstraint
     });
   };
 }
 
-@ValidatorConstraint({ name: 'Match' })
+@ValidatorConstraint({ name: "Match" })
 export class MatchConstraint implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
     const [relatedPropertyName] = args.constraints;
@@ -27,19 +27,22 @@ export class MatchConstraint implements ValidatorConstraintInterface {
   }
 }
 
-export function IsGreaterThan(property: string, validationOptions?: ValidationOptions) {
+export function IsGreaterThan(
+  property: string,
+  validationOptions?: ValidationOptions
+) {
   return (object: any, propertyName: string) => {
     registerDecorator({
       target: object.constructor,
       propertyName,
       options: validationOptions,
       constraints: [property],
-      validator: IsGreaterThanConstraint,
+      validator: IsGreaterThanConstraint
     });
   };
 }
 
-@ValidatorConstraint({ name: 'IsGreaterThan' })
+@ValidatorConstraint({ name: "IsGreaterThan" })
 export class IsGreaterThanConstraint implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
     const [relatedPropertyName] = args.constraints;

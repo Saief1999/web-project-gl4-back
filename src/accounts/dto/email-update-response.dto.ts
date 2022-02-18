@@ -1,6 +1,6 @@
 export class EmailUpdateResponseDto {
   message: string;
   constructor() {
-    this.message = '';
+    this.message = "";
   }
 }
